@@ -42,14 +42,29 @@
     </LinearLayout>
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
+        android:id="@+id/ib_record"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        android:src="@drawable/record"
+        >
     </ImageView>
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:id="@+id/ib_play"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="-3dp"
+        android:layout_marginBottom="35dp"
+        android:layout_marginBotto=""
+        android:layout_toEndOf="@+id/ib_record"
+        android:src="@drawable/play"
+        android:background="@android:color/transparent"
+        >
 
     </ImageView>
 
