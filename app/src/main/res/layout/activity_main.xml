@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:max_width="300dp"
         android:text="Recording File Name"
         android:textAlignment="center"
         android:textSize="20sp"
@@ -33,7 +32,6 @@
             android:text="00:00"
             android:textAlignment="center"
             android:layout_marginTop="30dp"
-            android:max_width="300dp"
             android:textSize="70sp"
             android:id="@+id/tv_time"
             >
@@ -60,7 +58,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginStart="-3dp"
         android:layout_marginBottom="35dp"
-        android:layout_marginBotto=""
         android:layout_toEndOf="@+id/ib_record"
         android:src="@drawable/play"
         android:background="@android:color/transparent"
