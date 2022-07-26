@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,7 +18,6 @@ public class MainActivity extends AppCompatActivity {
     ImageView ibPlay;
     TextView tvTime;
     TextView tvRecordingPath;
-    ImageView ivSimpleBg;
     boolean isRecording=true;
     boolean isPlaying=false;
 
@@ -30,5 +30,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ibRecord = findViewById(R.id.ib_record);
+        ibPlay = findViewById(R.id.ib_play);
+        tvTime = findViewById(R.id.tv_recording_path);
+
+        ibRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkRecordingPermission()) {
+
+                } else {
+                    requestRecordingPermission();
+                }
+            }
+        });
+    }
+
+    private void requestRecordingPermission(){
+
+    }
+
+    private boolean checkRecordingPermission(){
+        return true;
     }
 }
