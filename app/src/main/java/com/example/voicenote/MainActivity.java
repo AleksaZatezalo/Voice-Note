@@ -21,6 +21,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.IOException;
 import java.security.Permission;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        handler.removeCallbackAndMessages(null);
+                                        handler.removeCallbacks(null);
 
                                     }
                                 });
@@ -113,6 +114,81 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     requestRecordingPermission();
                 }
+            }
+        });
+
+        ibPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isPlaying){
+                    if (path!=null){
+                        try {
+                            mediaPlayer.setDataSource(getRecordingFilePath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "No Recording Present",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    try {
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mediaPlayer.start();
+                    isPlaying=true;
+                    ibPlay.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,
+                            R.drawable.pause));
+                    runTimer();
+
+                } else {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    mediaPlayer=null;
+                    mediaPlayer=new MediaPlayer();
+                    isPlaying=false;
+                    seconds=0;
+                    handler.removeCallbacks(null);
+                    ibPlay.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,
+                            R.drawable.play));
+                }
+            }
+        });
+    }
+
+    private void runTimer(){
+        handler = new Handler();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                int minutes=(seconds%3600)/60;
+                int secs = seconds % 60;
+                String time=String.format(Locale.getDefault(), "%02d:%02d", minutes, secs);
+                tvTime.setText(time);
+
+                if (isRecording || (isPlaying && playableSeconds !=-1)){
+                    seconds++;
+                    playableSeconds--;
+
+                    if (playableSeconds==-1 && isPlaying){
+                        mediaPlayer.stop();
+                        mediaPlayer.release();
+                        mediaPlayer=null;
+                        mediaPlayer=new MediaPlayer();
+                        playableSeconds=dummySeconds;
+                        seconds=0;
+                        handler.removeCallbacks(null);
+                        ibPlay.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,
+                                R.drawable.play));
+                        return;
+
+                    }
+                }
+
+                handler.postDelayed(this, 1000);
             }
         });
     }
