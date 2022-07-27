@@ -33,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView ibRecord;
     ImageView ibPlay;
     TextView tvTime;
-    TextView tvRecordingPath;
-    boolean isRecording=true;
+    boolean isRecording=false;
     boolean isPlaying=false;
     Handler handler;
 
@@ -53,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         ibRecord = findViewById(R.id.ib_record);
         ibPlay = findViewById(R.id.ib_play);
-        tvTime = findViewById(R.id.tv_recording_path);
+        tvTime = findViewById(R.id.tv_time);
         getSupportActionBar().hide();
 
         ibRecord.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                                 mediaRecorder.setOutputFile(getRecordingFilePath());
                                 path=getRecordingFilePath();
                                 mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                                mediaPlayer = new MediaPlayer();
 
                                 try {
                                     mediaRecorder.prepare();
@@ -140,8 +140,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     mediaPlayer.start();
                     isPlaying=true;
-                    ibPlay.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,
-                            R.drawable.pause));
+
                     runTimer();
 
                 } else {
@@ -152,8 +151,6 @@ public class MainActivity extends AppCompatActivity {
                     isPlaying=false;
                     seconds=0;
                     handler.removeCallbacks(null);
-                    ibPlay.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,
-                            R.drawable.play));
                 }
             }
         });
@@ -164,25 +161,26 @@ public class MainActivity extends AppCompatActivity {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                int minutes=(seconds%3600)/60;
-                int secs = seconds % 60;
-                String time=String.format(Locale.getDefault(), "%02d:%02d", minutes, secs);
-                tvTime.setText(time);
+
+                tvTime.setText("Ready to Start");
 
                 if (isRecording || (isPlaying && playableSeconds !=-1)){
                     seconds++;
-                    playableSeconds--;
+                    tvTime.setText("Recording");
 
-                    if (playableSeconds==-1 && isPlaying){
+                    if (isPlaying){
+                        playableSeconds--;
+                        tvTime.setText("Playing");
+                    }
+
+                    if (playableSeconds==(-seconds -1) && isPlaying){
                         mediaPlayer.stop();
                         mediaPlayer.release();
                         mediaPlayer=null;
                         mediaPlayer=new MediaPlayer();
                         playableSeconds=dummySeconds;
                         seconds=0;
-                        handler.removeCallbacks(null);
-                        ibPlay.setImageDrawable(ContextCompat.getDrawable(MainActivity.this,
-                                R.drawable.play));
+                        tvTime.setText("00:00");
                         return;
 
                     }
